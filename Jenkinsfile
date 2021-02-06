@@ -37,6 +37,11 @@ pipeline {
         	    sh "./gradlew build"
         	}
         }
+        stage ("Docker build") {
+            steps {
+                sh "docker build -t juanmamacgyvercode/calculator-complete-cicd ."
+            }
+        }
         stage ("Probar si funciona Docker") {
             steps {
                 sh "docker version"
@@ -48,6 +53,11 @@ pipeline {
                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
                     sh 'echo "$PASSWORD" | docker login --username "$USERNAME" --password-stdin'
                 }
+            }
+        }
+        stage ("Docker push") {
+            steps {
+                sh "docker push juanmamacgyvercode/calculator-complete-cicd ."
             }
         }
     }
