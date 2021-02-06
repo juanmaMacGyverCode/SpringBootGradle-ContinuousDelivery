@@ -57,7 +57,7 @@ pipeline {
         }
         stage ("Docker push") {
             steps {
-                sh "docker push juanmamacgyvercode/calculator-complete-cicd ."
+                sh "docker push juanmamacgyvercode/calculator-complete-cicd"
             }
         }
     }
