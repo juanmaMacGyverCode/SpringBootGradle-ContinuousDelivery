@@ -42,6 +42,14 @@ pipeline {
                 sh "docker version"
             }
         }
+        stage ("Docker login") {
+            steps {
+                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'DOCKER-CREDENTIALS',
+                    usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+                    sh 'echo "$PASSWORD" | docker login --username "$USERNAME" --password-stdin'
+                }
+            }
+        }
     }
     post {
         always {
