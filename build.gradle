@@ -2,6 +2,8 @@ plugins {
 	id 'org.springframework.boot' version '2.4.2'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'jacoco'
+	id "org.sonarqube" version "3.0"
 }
 
 group = 'com.matestodolocura'
@@ -29,4 +31,40 @@ dependencies {
 
 test {
 	useJUnitPlatform()
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.2
+			}
+		}
+	}
+}
+
+jacocoTestReport {
+	reports {
+		xml.enabled true
+	}
+}
+
+sonarqube {
+	properties {
+		property("sonar.host.url", "http://localhost:9000")
+		property("sonar.sources", "src/main/")
+		property("sonar.tests", "src/test/")
+		property("sonar.exclusions", "src/generated/")
+		property("sonar.jacoco.reportPath", "build/jacoco/test.exec")
+		property("sonar.junit.reportsPath","build/test-results/test")
+		property("sonar.core.codeCoveragePlugin","jacoco")
+		property("sonar.verbose", "true")
+		property("sonar.binaries" ,"build/classes/java")
+		property("sonar.java.binaries" ,"build/classes/java")
+		property("sonar.dynamicAnalysis", "reuseReports")
+	}
+}
+
+plugins.withType(JacocoPlugin) {
+	tasks["test"].finalizedBy 'jacocoTestReport'
 }
