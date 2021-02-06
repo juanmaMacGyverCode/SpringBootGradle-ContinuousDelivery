@@ -42,11 +42,6 @@ pipeline {
                 sh "docker build -t juanmamacgyvercode/calculator-complete-cicd ."
             }
         }
-        stage ("Probar si funciona Docker") {
-            steps {
-                sh "docker version"
-            }
-        }
         stage ("Docker login") {
             steps {
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'DOCKER-CREDENTIALS',
@@ -58,6 +53,11 @@ pipeline {
         stage ("Docker push") {
             steps {
                 sh "docker push juanmamacgyvercode/calculator-complete-cicd"
+            }
+        }
+        stage ("Deploy to staging") {
+            steps {
+                sh "docker run -d --rm -p 8765:8080 --name calculatorStaging juanmamacgyvercode/calculator-complete-cicd"
             }
         }
     }
