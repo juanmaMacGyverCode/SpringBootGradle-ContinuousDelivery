@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-@lombok.Generated
 @Data
 @Builder
 @AllArgsConstructor
