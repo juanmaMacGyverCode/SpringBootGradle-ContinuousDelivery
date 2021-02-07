@@ -68,6 +68,7 @@ pipeline {
         }
         stage ("Release beta version") {
              steps {
+                 sh "docker build -t juanmamacgyvercode/continuous-delivery-2021-beta ."
                  sh "docker push juanmamacgyvercode/continuous-delivery-2021-beta"
              }
         }
