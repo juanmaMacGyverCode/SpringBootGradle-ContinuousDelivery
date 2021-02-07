@@ -66,6 +66,11 @@ pipeline {
                  sh "chmod +x acceptance_test.sh && ./acceptance_test.sh"
              }
         }
+        stage ("Release beta version") {
+             steps {
+                 sh "docker push juanmamacgyvercode/continuous-delivery-2021-beta"
+             }
+        }
     }
     post {
         always {
