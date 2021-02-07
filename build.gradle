@@ -14,6 +14,9 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+	cucumberRuntime {
+		extendsFrom testImplementation
+	}
 }
 
 repositories {
@@ -27,10 +30,36 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	testImplementation 'io.cucumber:cucumber-java:6.8.1'
+	testImplementation 'io.cucumber:cucumber-java8:6.8.1'
+	testImplementation 'io.cucumber:cucumber-junit:6.8.1'
 }
 
 test {
 	useJUnitPlatform()
+}
+
+task cucumber() {
+	dependsOn assemble, testClasses
+	doLast {
+		javaexec {
+			main = "io.cucumber.core.cli.Main"
+			classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+			args = ['--plugin', 'pretty', '--glue', 'gradle.cucumber', 'src/test/resources']
+		}
+	}
+}
+
+task acceptanceTest(type: Test) {
+	include '**/acceptance/**'
+	systemProperties System.getProperties()
+}
+
+test {
+	exclude '**/acceptance/**'
 }
 
 jacocoTestCoverageVerification {
